@@ -35,9 +35,23 @@ gh-hacks:
 	touch $(COURSE_PATH)/.build/.nojekyll
 	touch $(COURSE_PATH)/.build/html/.nojekyll
 
-###################
-# Utility functions
-###################
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Development
+
+# Initializes poetry. Please be aware of the `poetry.toml` file that enforces the creation
+# of a `.venv` folder inside the project's folder. This is convenient to avoid messing up
+# the configuration at OS level.
+# In summary, this target sets the python used by Poetry and then install all the
+# dependencies (or updates them).
+# Note: it is highly recommended to use a Python Version Management (such as pyenv) instead
+#       of relying on the Python binary provided by your OS.
+.PHONY: init
+init:
+	$(call echo_bold,>>> Project initialization)
+	@echo "Creating the virtual environment ..."
+	@poetry env use python3
+	@echo "Installing project dependencies ..."
+	poetry install || poetry update
 
 # echo_bold,msg
 # Print a message with bold font

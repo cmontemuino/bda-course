@@ -1,8 +1,19 @@
 # Python related
-.ipynb_checkpoints
-.python-version
 **/__pycache__
-module*/*.pyc
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+#   For a library or package, you might want to ignore these files since the code is
+#   intended to run in multiple environments; otherwise, check them in:
+.python-version
 
 # Jupyter-book output
 coursebook/.build/*
+
+# Ignore poetry.lock file. It is not required for libraries.
+# Source: https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
+poetry.lock
