@@ -36,8 +36,8 @@ pdf:
 # See https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#static-site-generators
 gh-hacks:
 	$(call echo_bold,>>> Apply workaround for GitHub Pages excluded directories)
-	touch $(COURSE_PATH)/.build/.nojekyll
-	touch $(COURSE_PATH)/.build/html/.nojekyll
+	touch $(COURSE_PATH)/_build/.nojekyll
+	touch $(COURSE_PATH)/_build/html/.nojekyll
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Development
