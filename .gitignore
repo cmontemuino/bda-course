@@ -1,0 +1,8 @@
+# Python related
+.ipynb_checkpoints
+.python-version
+**/__pycache__
+module*/*.pyc
+
+# Jupyter-book output
+coursebook/.build/*
