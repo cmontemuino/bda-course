@@ -28,11 +28,11 @@ jobs:
       - name: Build documentation
         shell: bash
         run: |
-          # Build a PDF and single-page HTML outputs
-          make git-clean pdf single-html
+          # Build a PDF with coursebook contents
+          make git-clean pdf
           # Build the HTML output and link the redirect page
           make html
-          cp coursebook/index.html coursebook/.build
+          cp coursebook/index.html coursebook/_build
           # Add .nojekyll directive to stop GitHub Pages excluding directories with underscores
           make gh-hacks
 
@@ -40,6 +40,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.2.5
         with:
           branch: gh-pages                     # The branch the action should deploy to.
-          folder: .build                        # The folder the action should deploy.
+          folder: _build                        # The folder the action should deploy.
           git-config-name: Deployment Bot      # Name of the committer
           git-config-email: deploy@github.com  # Email of the committer

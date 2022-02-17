@@ -7,25 +7,29 @@ TERM_RESET	:= $(shell (tput sgr0) 2>/dev/null)
 
 default: html
 
-.PHONY: clean
+.PHONY: git-clean
 git-clean:
 	$(call echo_bold,>>> Clean git working tree)
 	git clean -xdf
 
-.PHONY: single-html
-single-html:
-	$(call echo_bold,>>> Build a single-page HTML)
-	jupyter-book clean --html $(COURSE_PATH)
+.PHONY: clean
+clean:
+	$(call echo_bold,>>> Clean the .build folder)
+	jupyter-book clean $(COURSE_PATH)
 
 .PHONY: html
 html:
 	$(call echo_bold,>>> Build HTML pages)
-	jupyter-book bulid --verbose --keep-going $(COURSE_PATH)
+	jupyter-book build --verbose --keep-going $(COURSE_PATH)
+	@echo "Copy a redirect page to the generated html content"
+	cp "$(COURSE_PATH)/index.html" "$(COURSE_PATH)/_build"
 
 .PHONY: pdf
 pdf:
 	$(call echo_bold,>>> Build PDF)
-	jupyter-book bulid --builder pdfhtml --verbose --keep-going $(COURSE_PATH)
+	jupyter-book build --builder pdfhtml --verbose --keep-going $(COURSE_PATH)
+	@echo "Remove the html output"
+	jupyter-book clean --html $(COURSE_PATH)
 
 .PHONY: gh-hacks
 # Add the .nojekyll directive to stop GitHub Pages excluding directories with underscores
@@ -52,6 +56,11 @@ init:
 	@poetry env use python3
 	@echo "Installing project dependencies ..."
 	poetry install || poetry update
+
+.PHONY: requirements
+requirements:
+	$(call echo_bold,>>> Export requirement.txt file)
+	@poetry export --without-hashes -o requirements.txt
 
 # echo_bold,msg
 # Print a message with bold font

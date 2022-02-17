@@ -3,6 +3,8 @@
 
 title: Bid Data Applications 
 author: Carlos Montemuiño
+copyright: "2022"
+# Auto-exclude files not in the TOC
 only_build_toc_files: true
 
 # Force re-execution of notebooks on each build.

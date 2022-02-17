@@ -12,8 +12,9 @@
 .python-version
 
 # Jupyter-book output
-coursebook/.build/*
+**/_build/*
 
 # Ignore poetry.lock file. It is not required for libraries.
 # Source: https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
 poetry.lock
+
