@@ -1,0 +1,26 @@
+# Book settings
+# Learn more at https://jupyterbook.org/customize/config.html
+
+title: Bid Data Applications 
+author: Carlos Montemuiño
+copyright: "2022"
+# Auto-exclude files not in the TOC
+only_build_toc_files: true
+
+# Force re-execution of notebooks on each build.
+# See https://jupyterbook.org/content/execute.html
+execute:
+  execute_notebooks: force
+ 
+# Add GitHub buttons
+# See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
+html:
+  use_issue_button: true
+  use_repository_button: true
+  extra_navbar: <p>Download notes as <a href="/bda-course/pdf/book.pdf">PDF</a>.</p><p>Powered by <a href="https://jupyterbook.org">Jupyter Book</a>.</p>
+
+# Information about where the book exists on the web
+repository:
+  url: https://github.com/cmontemuino/bda-course # Online location of your book
+  path_to_book: "coursebook"  # Optional path to your book, relative to the repository root
+  branch: main  # Which branch of the repository should be used when creating links (optional)
