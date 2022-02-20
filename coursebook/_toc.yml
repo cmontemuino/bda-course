@@ -15,3 +15,10 @@ format: jb-book
 root: index.md
 options:
   numbered: true
+parts:
+- caption: Prerequisites
+  chapters:
+    - file: prerequisites/index.md
+      sections:
+      - file: prerequisites/00_linux.md
+
