@@ -4,6 +4,9 @@
 
 ## Pre-requisites
 
+- Be comfortable with basic Python. Familiarity with Numpy and Pandas is beneficial but not required.
+- Have an environment ready for the several hands-on exercises (e.g., own laptop or cloud resource)
+
 ## Syllabus
 
 ## Something broken?
