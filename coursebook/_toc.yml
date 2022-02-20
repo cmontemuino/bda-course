@@ -19,4 +19,6 @@ parts:
 - caption: Prerequisites
   chapters:
     - file: prerequisites/index.md
+      sections:
+      - file: prerequisites/00_linux.md
 
