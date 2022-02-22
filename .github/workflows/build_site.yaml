@@ -29,7 +29,7 @@ jobs:
         shell: bash
         run: |
           # Setup a kernel required by the notebooks
-          ipython kernel install --name “bda-labs” --user
+          ipython kernel install --name "bda-labs" --user
           # Build a PDF with coursebook contents
           make git-clean pdf
           # Build the HTML output and link the redirect page
