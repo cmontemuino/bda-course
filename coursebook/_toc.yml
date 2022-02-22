@@ -21,4 +21,7 @@ parts:
     - file: prerequisites/index.md
       sections:
       - file: prerequisites/00_linux.md
+- caption: "Introduction to Apache Spark"
+  chapters:
+    - file: modules/m1/01_00_introduction_to_rdd
 
