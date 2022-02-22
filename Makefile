@@ -62,6 +62,10 @@ requirements:
 	$(call echo_bold,>>> Export requirement.txt file)
 	@poetry export --without-hashes -o requirements.txt
 
+.PHONY: jupyter-start
+jupyter-start:
+	jupyter notebook --no-browser --port=8898
+
 # echo_bold,msg
 # Print a message with bold font
 define echo_bold

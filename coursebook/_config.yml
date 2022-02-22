@@ -11,6 +11,10 @@ only_build_toc_files: true
 # See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: force
+
+# Add a bibtex file so that we can create citations
+bibtex_bibfiles:
+  - references.bib
  
 # Add GitHub buttons
 # See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
