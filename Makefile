@@ -60,7 +60,7 @@ init:
 .PHONY: requirements
 requirements:
 	$(call echo_bold,>>> Export requirement.txt file)
-	@poetry export --without-hashes -o requirements.txt
+	@poetry export --without-hashes -o binder/requirements.txt
 
 .PHONY: jupyter-start
 jupyter-start:
