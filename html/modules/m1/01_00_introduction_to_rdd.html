@@ -247,6 +247,18 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal nav-link" href="#initialize-spark">
      Initialize Spark
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sparkconf">
+       SparkConf
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sparkcontext">
+       SparkContext
+      </a>
+     </li>
+    </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#define-an-rdd">
@@ -299,6 +311,18 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal nav-link" href="#initialize-spark">
      Initialize Spark
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sparkconf">
+       SparkConf
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sparkcontext">
+       SparkContext
+      </a>
+     </li>
+    </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#define-an-rdd">
@@ -360,7 +384,8 @@ slightly differ if you are using a different strategy (e.g., <a class="reference
 <span class="n">ipython</span> <span class="n">kernel</span> <span class="n">install</span> <span class="o">--</span><span class="n">name</span> <span class="s2">&quot;bda-labs&quot;</span> <span class="o">--</span><span class="n">user</span>
 </pre></div>
 </div>
-<p>The output from above command is a JSON file located under your Jupyter installation. For example: <code class="docutils literal notranslate"><span class="pre">/path_to_jupyter_installtion/kernels/bda-labs/kernel.json</span></code></p>
+<details>
+The output from above command is a JSON file located under your Jupyter installation. For example: `/path_to_jupyter_installtion/kernels/bda-labs/kernel.json`
 <p>It’s content will be similar to the following:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="w"> </span><span class="nt">&quot;argv&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
@@ -378,21 +403,17 @@ slightly differ if you are using a different strategy (e.g., <a class="reference
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
+</details>
 </div>
 <div class="section" id="initialize-spark">
 <h3>Initialize Spark<a class="headerlink" href="#initialize-spark" title="Permalink to this headline">¶</a></h3>
 <p>We need to do some preparation first. In the next snippet, we will import the <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.SparkContext.html#pyspark.SparkContext">SparkContext</a> and <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.SparkConf.html#pyspark.SparkConf">SparkConf</a> classes.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark</span> <span class="kn">import</span> <span class="n">SparkContext</span><span class="p">,</span> <span class="n">SparkConf</span>
-</pre></div>
-</div>
-</div>
-</div>
 <p>Now we we proceed to create the <strong>configuration</strong> for our application and a <strong>context</strong> which tells Spark how to access the execution environment (local or a cluster).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># we use &quot;local&quot; to indicate we&#39;re running in local mode</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark</span> <span class="kn">import</span> <span class="n">SparkContext</span><span class="p">,</span> <span class="n">SparkConf</span>
+
+<span class="c1"># we use &quot;local&quot; to indicate we&#39;re running in local mode</span>
 <span class="n">conf</span> <span class="o">=</span> <span class="n">SparkConf</span><span class="p">()</span><span class="o">.</span><span class="n">setAppName</span><span class="p">(</span><span class="s2">&quot;into-to-rdd&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setMaster</span><span class="p">(</span><span class="s2">&quot;local&quot;</span><span class="p">)</span>
 <span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="p">(</span><span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
 </pre></div>
@@ -411,8 +432,83 @@ Setting default log level to &quot;WARN&quot;.
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22/02/24 06:19:05 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22/02/25 10:28:36 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 </pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="sparkconf">
+<h4>SparkConf<a class="headerlink" href="#sparkconf" title="Permalink to this headline">¶</a></h4>
+<p>We triggered a couple of actions with the above code. To start with, we created a <code class="docutils literal notranslate"><span class="pre">SparkConfig</span></code> object and chained two important configurations:
+- The Spark application name.
+- The URL where the <code class="docutils literal notranslate"><span class="pre">master</span> <span class="pre">node</span></code> can be located. <strong>Setting it to <code class="docutils literal notranslate"><span class="pre">&quot;local&quot;</span></code> is a special configuration to indicate we are running on the same host where this code is being executed.</strong></p>
+<p><strong>Note</strong>: it is important to notice that Spark runs on a JVM. When a <code class="docutils literal notranslate"><span class="pre">SparkConf</span></code> is created, it will load values from <code class="docutils literal notranslate"><span class="pre">spark.*</span></code> Java system properties. If we make such properties available to the process running Spark, then they would be picked up.</p>
+<p>Let’s inspect a couple of common Spark configuration properties:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spark.app.name: </span><span class="si">{</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spark.app.name&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spark.master: </span><span class="si">{</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spark.master&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spark.home: </span><span class="si">{</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spark.home&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>spark.app.name: into-to-rdd
+spark.master: local
+spark.home: None
+</pre></div>
+</div>
+</div>
+</div>
+<p>So far so good. We get the same value we chained to the <code class="docutils literal notranslate"><span class="pre">SparkConf</span></code> object before.</p>
+<p><strong>Homework/self-research</strong>:</p>
+<ul class="simple">
+<li><p>Why don’t we have a value for <code class="docutils literal notranslate"><span class="pre">spark.home</span></code>?</p></li>
+<li><p>Should we care?</p></li>
+</ul>
+<p>Should we want to know all the properties available, then the following snippet might help.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">getAll</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+     <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;spark.app.name&#39;, &#39;into-to-rdd&#39;)
+(&#39;spark.master&#39;, &#39;local&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="sparkcontext">
+<h4>SparkContext<a class="headerlink" href="#sparkcontext" title="Permalink to this headline">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">SparkContext</span></code> is at the hearth of Spark. It is the main entry point for Spark that representes the connection of the “driver program” to a Spark cluster. <strong>You must get familiarized with it</strong>.</p>
+<p>We can pass several parameters to it, from which two of them are mandatory: <code class="docutils literal notranslate"><span class="pre">master</span></code> and <code class="docutils literal notranslate"><span class="pre">appName</span></code>. In our case, we passed such information wrapped into a <code class="docutils literal notranslate"><span class="pre">SparkConf</span></code> object.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SparkContext</span></code> is <strong>always</strong> created on the driver and <strong>it is not serialized</strong>. Thus, it cannot be shipped to workers.</p></li>
+<li><p>We can have one <code class="docutils literal notranslate"><span class="pre">SparkContext</span></code> per application at most. Try to run the cell where we created the <code class="docutils literal notranslate"><span class="pre">SparkContext</span></code> and see what happens!</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Actually, only one <code class="docutils literal notranslate"><span class="pre">SparkContext</span></code> can be active per JVM. If we want to create a new one, we must call the <code class="docutils literal notranslate"><span class="pre">stop()</span></code> method to our existing <code class="docutils literal notranslate"><span class="pre">SparkContext</span></code> object first.</p>
+</div>
+<p>Another consequence of passing a <code class="docutils literal notranslate"><span class="pre">SparkConf</span></code> object to the <code class="docutils literal notranslate"><span class="pre">SparkContext</span></code> constructor is <strong>immutable configuration</strong>. The <code class="docutils literal notranslate"><span class="pre">SparkConf</span></code> object is cloned and can no longer be modified. Let’s see it in action:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Is our SparkConf object the same we get from SparkContext?</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;conf == sc.getConf() --&gt; </span><span class="si">{</span><span class="n">conf</span> <span class="o">==</span> <span class="n">sc</span><span class="o">.</span><span class="n">getConf</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>conf == sc.getConf() --&gt; False
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -437,6 +533,8 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Stage 0:&gt;                                                          (0 + 1) / 1]
+
+[Stage 0:===========================================================(1 + 0) / 1]
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                                
