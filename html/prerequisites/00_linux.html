@@ -406,12 +406,12 @@ following commands in a terminal.</p>
 wget https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
 sudo tar -xzvf spark-3.2.1-bin-hadoop3.2.tgz
 sudo apt-get install openjdk-8-jre -y
-<span class="nb">echo</span> <span class="s1">&#39;SPARK_HOME=~/spark-3.2.1-bin-hadoop3.2&#39;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s1">&#39;PATH=$SPARK_HOME/bin:$PATH&#39;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s1">&#39;PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH&#39;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s1">&#39;PYSPARK_DRIVER_PYTHON=jupyter&#39;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s1">&#39;PYSPARK_DRIVER_PYTHON_OPTS=notebook&#39;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s1">&#39;PYSPARK_PYTHON=python3.9&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export SPARK_HOME=~/spark-3.2.1-bin-hadoop3.2&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export PATH=$SPARK_HOME/bin:$PATH&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export PYSPARK_DRIVER_PYTHON=jupyter&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export PYSPARK_DRIVER_PYTHON_OPTS=notebook&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export PYSPARK_PYTHON=python3.9&#39;</span> &gt;&gt; ~/.bashrc
 <span class="nb">echo</span> <span class="s1">&#39;export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64&#39;</span> &gt;&gt; ~/.bashrc
 <span class="nb">exec</span> bash
 jupyter notebook --generate-config
@@ -450,7 +450,7 @@ Please ammend it as needed.</p>
 <p>Next step is installing a JRE (Java Runtime Engine), so that we can use the PySpark shell (or submit
 a job to a cluster):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo apt-get install openjdk-8-jre -y
-<span class="nb">export</span> <span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-8-openjdk-amd64/jre/
+<span class="nb">export</span> <span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-8-openjdk-amd64/
 </pre></div>
 </div>
 </div>

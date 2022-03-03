@@ -79,12 +79,12 @@ cd ~
 wget https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
 sudo tar -xzvf spark-3.2.1-bin-hadoop3.2.tgz
 sudo apt-get install openjdk-8-jre -y
-echo 'SPARK_HOME=~/spark-3.2.1-bin-hadoop3.2' >> ~/.bashrc
-echo 'PATH=$SPARK_HOME/bin:$PATH' >> ~/.bashrc
-echo 'PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH' >> ~/.bashrc
-echo 'PYSPARK_DRIVER_PYTHON=jupyter' >> ~/.bashrc
-echo 'PYSPARK_DRIVER_PYTHON_OPTS=notebook' >> ~/.bashrc
-echo 'PYSPARK_PYTHON=python3.9' >> ~/.bashrc
+echo 'export SPARK_HOME=~/spark-3.2.1-bin-hadoop3.2' >> ~/.bashrc
+echo 'export PATH=$SPARK_HOME/bin:$PATH' >> ~/.bashrc
+echo 'export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH' >> ~/.bashrc
+echo 'export PYSPARK_DRIVER_PYTHON=jupyter' >> ~/.bashrc
+echo 'export PYSPARK_DRIVER_PYTHON_OPTS=notebook' >> ~/.bashrc
+echo 'export PYSPARK_PYTHON=python3.9' >> ~/.bashrc
 echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' >> ~/.bashrc
 exec bash
 jupyter notebook --generate-config
@@ -128,7 +128,7 @@ a job to a cluster):
 
 ```shell
 sudo apt-get install openjdk-8-jre -y
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 ```
 
 #### Configure PySpark
