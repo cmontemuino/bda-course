@@ -231,6 +231,35 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#apache-spark">
    Apache Spark
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#step-by-step-setup">
+     Step-by-step Setup
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#download-apache-spark">
+       Download Apache Spark
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#setup-jre">
+       Setup JRE
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#configure-pyspark">
+       Configure PySpark
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#workaround-for-jupyter-notebooks-in-linux">
+       Workaround for Jupyter Notebooks in Linux
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -271,6 +300,35 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#apache-spark">
    Apache Spark
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#step-by-step-setup">
+     Step-by-step Setup
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#download-apache-spark">
+       Download Apache Spark
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#setup-jre">
+       Setup JRE
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#configure-pyspark">
+       Configure PySpark
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#workaround-for-jupyter-notebooks-in-linux">
+       Workaround for Jupyter Notebooks in Linux
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -340,8 +398,34 @@ opinionated list of editors in case you do not already have a favourite:</p>
 </div>
 <div class="section" id="apache-spark">
 <h2>Apache Spark<a class="headerlink" href="#apache-spark" title="Permalink to this headline">¶</a></h2>
-<p>We will setup <a class="reference external" href="https://spark.apache.org">Apache Spark</a> now. You need to open the <code class="docutils literal notranslate"><span class="pre">downloads</span></code> page, and download a spark distribution.
-We suggest to choose the same options as on the screenshot below. If you see a newer version is
+<div class="admonition-tl-dr admonition">
+<p class="admonition-title">TL;DR</p>
+<p>You can skip the whole <a class="reference external" href="#step-by-step-setup">Step-by-step Setup section</a> by issuing the
+following commands in a terminal.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~
+wget https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz
+sudo tar -xzvf spark-3.2.1-bin-hadoop3.2.tgz
+sudo apt-get install openjdk-8-jre -y
+<span class="nb">echo</span> <span class="s1">&#39;SPARK_HOME=~/spark-3.2.1-bin-hadoop3.2&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;PATH=$SPARK_HOME/bin:$PATH&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;PYSPARK_DRIVER_PYTHON=jupyter&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;PYSPARK_DRIVER_PYTHON_OPTS=notebook&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;PYSPARK_PYTHON=python3.9&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">exec</span> bash
+jupyter notebook --generate-config
+sed -i <span class="s1">&#39;/# c.NotebookApp.use_redirect_file/s/$*True/False/g&#39;</span> ~/.jupyter/jupyter_notebook_config.py
+sed -i <span class="s1">&#39;/c.NotebookApp.use_redirect_file/s/^#*\s*//g&#39;</span> ~/.jupyter/jupyter_notebook_config.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-by-step-setup">
+<h3>Step-by-step Setup<a class="headerlink" href="#step-by-step-setup" title="Permalink to this headline">¶</a></h3>
+<p>We will setup <a class="reference external" href="https://spark.apache.org">Apache Spark</a> now. You need to open the <code class="docutils literal notranslate"><span class="pre">downloads</span></code> page, and download a spark distribution.</p>
+<div class="section" id="download-apache-spark">
+<h4>Download Apache Spark<a class="headerlink" href="#download-apache-spark" title="Permalink to this headline">¶</a></h4>
+<p>We suggest to choose the same options as on the screenshot below. If you see a newer version is
 available, please feel free to choose it.</p>
 <p><img alt="Download Spark" src="../_images/download-spark.png" />
 <a class="reference external" href="https://spark.apache.org/downloads.html">Image Link</a></p>
@@ -355,30 +439,62 @@ folder.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo tar -xzvf spark-3.2.1-bin-hadoop3.2.tgz
 </pre></div>
 </div>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
 <p>The above command assumes you downloaded version 3.2.1 with hadoop 3.2 binaries.
 Please ammend it as needed.</p>
 </div>
-<p>Now what we need to do is telling <code class="docutils literal notranslate"><span class="pre">Python</span></code> how to find Spark:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s2">&quot;export SPARK_HOME=~/spark-3.2.1-bin-hadoop3.2&quot;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s2">&quot;export PATH=</span><span class="nv">$SPARK_HOME</span><span class="s2">:</span><span class="nv">$PATH</span><span class="s2">&quot;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s2">&quot;export PYTHONPATH=</span><span class="nv">$SPARK_HOME</span><span class="s2">/python:</span><span class="nv">$PYTHONPATH</span><span class="s2">&quot;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s2">&quot;export PYSPARK_DRIVER-PYTHON=jupyter&quot;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s2">&quot;export PYSPARK_DRIVER_PYTHON_OPTS=notebook&quot;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s2">&quot;export PYSPARK_PYTHON=python3&quot;</span> &gt;&gt; ~/.bashrc
+</div>
+<div class="section" id="setup-jre">
+<h4>Setup JRE<a class="headerlink" href="#setup-jre" title="Permalink to this headline">¶</a></h4>
+<p>Next step is installing a JRE (Java Runtime Engine), so that we can use the PySpark shell (or submit
+a job to a cluster):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo apt-get install openjdk-8-jre -y
+<span class="nb">export</span> <span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-8-openjdk-amd64/jre/
 </pre></div>
+</div>
+</div>
+<div class="section" id="configure-pyspark">
+<h4>Configure PySpark<a class="headerlink" href="#configure-pyspark" title="Permalink to this headline">¶</a></h4>
+<p>We need to define several environment variables to let Spark find <code class="docutils literal notranslate"><span class="pre">Python</span></code> and use Jupyter notebooks when initiating the PySpark shell:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;export SPARK_HOME=~/spark-3.2.1-bin-hadoop3.2&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export PATH=$SPARK_HOME/bin:$PATH&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export PYSPARK_DRIVER_PYTHON=jupyter&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export PYSPARK_DRIVER_PYTHON_OPTS=notebook&#39;</span> &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="s1">&#39;export PYSPARK_PYTHON=python3.9&#39;</span> &gt;&gt; ~/.bashrc
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>PySpark requires the same minor version of Python in both driver and workers. This is why we specify what exact version to use
+in the <code class="docutils literal notranslate"><span class="pre">PYSPARK_PYTHON</span></code> variable.</p>
 </div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>Please do not forget to reload your interactive shell session. <a class="footnote-reference brackets" href="#footnote1" id="id1">1</a></p>
+</div>
+</div>
+<div class="section" id="workaround-for-jupyter-notebooks-in-linux">
+<h4>Workaround for Jupyter Notebooks in Linux<a class="headerlink" href="#workaround-for-jupyter-notebooks-in-linux" title="Permalink to this headline">¶</a></h4>
+<p>If you start a PySpark shell (i.e., <code class="docutils literal notranslate"><span class="pre">pyspark</span></code>) and get a “Access to the file was denied after
+starting…”, then you could try the following workround. <a class="footnote-reference brackets" href="#footnote2" id="id2">2</a></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jupyter notebook --generate-config
+sed -i <span class="s1">&#39;/# c.NotebookApp.use_redirect_file/s/$*True/False/g&#39;</span> ~/.jupyter/jupyter_notebook_config.py
+sed -i <span class="s1">&#39;/c.NotebookApp.use_redirect_file/s/^#*\s*//g&#39;</span> ~/.jupyter/jupyter_notebook_config.py
+</pre></div>
 </div>
 <hr class="footnotes docutils" />
 <dl class="footnote brackets">
 <dt class="label" id="footnote1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p><a class="reference external" href="https://www.delftstack.com/howto/linux/reload-bashrc/">https://www.delftstack.com/howto/linux/reload-bashrc/</a></p>
 </dd>
+<dt class="label" id="footnote2"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p><a class="reference external" href="https://github.com/jupyter/notebook/issues/4353#issuecomment-570564277">https://github.com/jupyter/notebook/issues/4353#issuecomment-570564277</a></p>
+</dd>
 </dl>
+</div>
+</div>
 </div>
 </div>
 

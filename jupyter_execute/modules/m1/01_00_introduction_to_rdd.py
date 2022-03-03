@@ -41,7 +41,7 @@
 # ```
 # 
 # <details>
-# The output from above command is a JSON file located under your Jupyter installation. For example: `/path_to_jupyter_installtion/kernels/bda-labs/kernel.json`
+# The output from above command is a JSON file located under your Jupyter installation. For example: `/path_to_jupyter_installation/kernels/bda-labs/kernel.json`
 # 
 # It's content will be similar to the following:
 # 
