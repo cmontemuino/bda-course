@@ -76,7 +76,7 @@
 from pyspark import SparkContext, SparkConf
 
 # we use "local" to indicate we're running in local mode
-conf = SparkConf().setAppName("into-to-rdd").setMaster("local")
+conf = SparkConf().setAppName("intro-to-rdd").setMaster("local")
 sc = SparkContext(conf=conf)
 
 

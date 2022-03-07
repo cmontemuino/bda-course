@@ -53,6 +53,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Introduction to the DataFrame API" href="../m2/02_00_introduction_to_dataframe.html" />
     <link rel="prev" title="Linux" href="../../prerequisites/00_linux.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -125,6 +126,18 @@ const thebe_selector_output = ".output, .cell_output"
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Introduction to RDD
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Spark DataFrame
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../m2/02_00_introduction_to_dataframe.html">
+   Introduction to the DataFrame API
   </a>
  </li>
 </ul>
@@ -348,7 +361,7 @@ const thebe_selector_output = ".output, .cell_output"
   <div class="tex2jax_ignore mathjax_ignore section" id="introduction-to-rdd">
 <h1>Introduction to RDD<a class="headerlink" href="#introduction-to-rdd" title="Permalink to this headline">¶</a></h1>
 <p>In this first session, we will introduce what is a <a class="reference external" href="https://databricks.com/glossary/what-is-rdd">Resilient Distributed Dataset (RDD)</a>. Please refer to the original paper for in-depth details
-<span id="id1">[<a class="reference internal" href="#id3" title="Matei Zaharia, Mosharaf Chowdhury, Tathagata Das, Ankur Dave, Justin Ma, Murphy McCauly, Michael J Franklin, Scott Shenker, and Ion Stoica. Resilient distributed datasets: a fault-tolerant abstraction for in-memory cluster computing. In 9th USENIX Symposium on Networked Systems Design and Implementation (NSDI 12), 15–28. 2012.">1</a>]</span>.</p>
+<span id="id1">[<a class="reference internal" href="#id5" title="Matei Zaharia, Mosharaf Chowdhury, Tathagata Das, Ankur Dave, Justin Ma, Murphy McCauly, Michael J Franklin, Scott Shenker, and Ion Stoica. Resilient distributed datasets: a fault-tolerant abstraction for in-memory cluster computing. In 9th USENIX Symposium on Networked Systems Design and Implementation (NSDI 12), 15–28. 2012.">1</a>]</span>.</p>
 <p>To understand how Spark works, we need to understand the essence of RDD. Long story short, an RDD <strong>represents a fault-tolerant collection of elements partitioned across the nodes of a cluster that can be operated in parallel</strong>. We will chop the last sentence into pieces now.</p>
 <div class="section" id="processing-logic-expressed-as-rdd-operations">
 <h2>Processing Logic Expressed as RDD Operations<a class="headerlink" href="#processing-logic-expressed-as-rdd-operations" title="Permalink to this headline">¶</a></h2>
@@ -414,7 +427,7 @@ The output from above command is a JSON file located under your Jupyter installa
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark</span> <span class="kn">import</span> <span class="n">SparkContext</span><span class="p">,</span> <span class="n">SparkConf</span>
 
 <span class="c1"># we use &quot;local&quot; to indicate we&#39;re running in local mode</span>
-<span class="n">conf</span> <span class="o">=</span> <span class="n">SparkConf</span><span class="p">()</span><span class="o">.</span><span class="n">setAppName</span><span class="p">(</span><span class="s2">&quot;into-to-rdd&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setMaster</span><span class="p">(</span><span class="s2">&quot;local&quot;</span><span class="p">)</span>
+<span class="n">conf</span> <span class="o">=</span> <span class="n">SparkConf</span><span class="p">()</span><span class="o">.</span><span class="n">setAppName</span><span class="p">(</span><span class="s2">&quot;intro-to-rdd&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setMaster</span><span class="p">(</span><span class="s2">&quot;local&quot;</span><span class="p">)</span>
 <span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="p">(</span><span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -432,7 +445,7 @@ Setting default log level to &quot;WARN&quot;.
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22/03/03 15:18:04 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22/03/07 12:29:51 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 </pre></div>
 </div>
 </div>
@@ -453,7 +466,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>spark.app.name: into-to-rdd
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>spark.app.name: intro-to-rdd
 spark.master: local
 spark.home: None
 </pre></div>
@@ -475,7 +488,7 @@ spark.home: None
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;spark.app.name&#39;, &#39;into-to-rdd&#39;)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;spark.app.name&#39;, &#39;intro-to-rdd&#39;)
 (&#39;spark.master&#39;, &#39;local&#39;)
 </pre></div>
 </div>
@@ -533,8 +546,6 @@ spark.home: None
 </div>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Stage 0:&gt;                                                          (0 + 1) / 1]
-
-[Stage 0:===========================================================(1 + 0) / 1]
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                                
@@ -550,7 +561,7 @@ spark.home: None
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <p id="id2"><dl class="citation">
-<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Matei Zaharia, Mosharaf Chowdhury, Tathagata Das, Ankur Dave, Justin Ma, Murphy McCauly, Michael J Franklin, Scott Shenker, and Ion Stoica. Resilient distributed datasets: a fault-tolerant abstraction for in-memory cluster computing. In <em>9th USENIX Symposium on Networked Systems Design and Implementation (NSDI 12)</em>, 15–28. 2012.</p>
 </dd>
 </dl>
@@ -589,6 +600,13 @@ spark.home: None
             <p class="prev-next-subtitle">previous</p>
             <p class="prev-next-title">Linux</p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="../m2/02_00_introduction_to_dataframe.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Introduction to the DataFrame API</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             
