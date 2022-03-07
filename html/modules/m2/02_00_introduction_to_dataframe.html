@@ -261,6 +261,13 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#loading-the-scores-csv-file-into-a-dataframe">
    Loading the Scores CSV file into a DataFrame
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#managing-schema-and-null-values">
+     Managing Schema and Null Values
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#references">
@@ -308,6 +315,13 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#loading-the-scores-csv-file-into-a-dataframe">
    Loading the Scores CSV file into a DataFrame
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#managing-schema-and-null-values">
+     Managing Schema and Null Values
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#references">
@@ -357,7 +371,7 @@ Setting default log level to &quot;WARN&quot;.
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22/03/07 12:29:59 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22/03/07 17:03:06 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 </pre></div>
 </div>
 </div>
@@ -369,6 +383,372 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 
 <span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">SparkSession</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on class SparkSession in module pyspark.sql.session:
+
+class SparkSession(pyspark.sql.pandas.conversion.SparkConversionMixin)
+ |  SparkSession(sparkContext, jsparkSession=None)
+ |  
+ |  The entry point to programming Spark with the Dataset and DataFrame API.
+ |  
+ |  A SparkSession can be used create :class:`DataFrame`, register :class:`DataFrame` as
+ |  tables, execute SQL over tables, cache tables, and read parquet files.
+ |  To create a :class:`SparkSession`, use the following builder pattern:
+ |  
+ |  .. autoattribute:: builder
+ |     :annotation:
+ |  
+ |  Examples
+ |  --------
+ |  &gt;&gt;&gt; spark = SparkSession.builder \
+ |  ...     .master(&quot;local&quot;) \
+ |  ...     .appName(&quot;Word Count&quot;) \
+ |  ...     .config(&quot;spark.some.config.option&quot;, &quot;some-value&quot;) \
+ |  ...     .getOrCreate()
+ |  
+ |  &gt;&gt;&gt; from datetime import datetime
+ |  &gt;&gt;&gt; from pyspark.sql import Row
+ |  &gt;&gt;&gt; spark = SparkSession(sc)
+ |  &gt;&gt;&gt; allTypes = sc.parallelize([Row(i=1, s=&quot;string&quot;, d=1.0, l=1,
+ |  ...     b=True, list=[1, 2, 3], dict={&quot;s&quot;: 0}, row=Row(a=1),
+ |  ...     time=datetime(2014, 8, 1, 14, 1, 5))])
+ |  &gt;&gt;&gt; df = allTypes.toDF()
+ |  &gt;&gt;&gt; df.createOrReplaceTempView(&quot;allTypes&quot;)
+ |  &gt;&gt;&gt; spark.sql(&#39;select i+1, d+1, not b, list[1], dict[&quot;s&quot;], time, row.a &#39;
+ |  ...            &#39;from allTypes where b and i &gt; 0&#39;).collect()
+ |  [Row((i + 1)=2, (d + 1)=2.0, (NOT b)=False, list[1]=2,         dict[s]=0, time=datetime.datetime(2014, 8, 1, 14, 1, 5), a=1)]
+ |  &gt;&gt;&gt; df.rdd.map(lambda x: (x.i, x.s, x.d, x.l, x.b, x.time, x.row.a, x.list)).collect()
+ |  [(1, &#39;string&#39;, 1.0, 1, True, datetime.datetime(2014, 8, 1, 14, 1, 5), 1, [1, 2, 3])]
+ |  
+ |  Method resolution order:
+ |      SparkSession
+ |      pyspark.sql.pandas.conversion.SparkConversionMixin
+ |      builtins.object
+ |  
+ |  Methods defined here:
+ |  
+ |  __enter__(self)
+ |      Enable &#39;with SparkSession.builder.(...).getOrCreate() as session: app&#39; syntax.
+ |      
+ |      .. versionadded:: 2.0
+ |  
+ |  __exit__(self, exc_type, exc_val, exc_tb)
+ |      Enable &#39;with SparkSession.builder.(...).getOrCreate() as session: app&#39; syntax.
+ |      
+ |      Specifically stop the SparkSession on exit of the with block.
+ |      
+ |      .. versionadded:: 2.0
+ |  
+ |  __init__(self, sparkContext, jsparkSession=None)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |  
+ |  createDataFrame(self, data, schema=None, samplingRatio=None, verifySchema=True)
+ |      Creates a :class:`DataFrame` from an :class:`RDD`, a list or a :class:`pandas.DataFrame`.
+ |      
+ |      When ``schema`` is a list of column names, the type of each column
+ |      will be inferred from ``data``.
+ |      
+ |      When ``schema`` is ``None``, it will try to infer the schema (column names and types)
+ |      from ``data``, which should be an RDD of either :class:`Row`,
+ |      :class:`namedtuple`, or :class:`dict`.
+ |      
+ |      When ``schema`` is :class:`pyspark.sql.types.DataType` or a datatype string, it must match
+ |      the real data, or an exception will be thrown at runtime. If the given schema is not
+ |      :class:`pyspark.sql.types.StructType`, it will be wrapped into a
+ |      :class:`pyspark.sql.types.StructType` as its only field, and the field name will be &quot;value&quot;.
+ |      Each record will also be wrapped into a tuple, which can be converted to row later.
+ |      
+ |      If schema inference is needed, ``samplingRatio`` is used to determined the ratio of
+ |      rows used for schema inference. The first row will be used if ``samplingRatio`` is ``None``.
+ |      
+ |      .. versionadded:: 2.0.0
+ |      
+ |      .. versionchanged:: 2.1.0
+ |         Added verifySchema.
+ |      
+ |      Parameters
+ |      ----------
+ |      data : :class:`RDD` or iterable
+ |          an RDD of any kind of SQL data representation (:class:`Row`,
+ |          :class:`tuple`, ``int``, ``boolean``, etc.), or :class:`list`, or
+ |          :class:`pandas.DataFrame`.
+ |      schema : :class:`pyspark.sql.types.DataType`, str or list, optional
+ |          a :class:`pyspark.sql.types.DataType` or a datatype string or a list of
+ |          column names, default is None.  The data type string format equals to
+ |          :class:`pyspark.sql.types.DataType.simpleString`, except that top level struct type can
+ |          omit the ``struct&lt;&gt;`` and atomic types use ``typeName()`` as their format, e.g. use
+ |          ``byte`` instead of ``tinyint`` for :class:`pyspark.sql.types.ByteType`.
+ |          We can also use ``int`` as a short name for :class:`pyspark.sql.types.IntegerType`.
+ |      samplingRatio : float, optional
+ |          the sample ratio of rows used for inferring
+ |      verifySchema : bool, optional
+ |          verify data types of every row against schema. Enabled by default.
+ |      
+ |      Returns
+ |      -------
+ |      :class:`DataFrame`
+ |      
+ |      Notes
+ |      -----
+ |      Usage with spark.sql.execution.arrow.pyspark.enabled=True is experimental.
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; l = [(&#39;Alice&#39;, 1)]
+ |      &gt;&gt;&gt; spark.createDataFrame(l).collect()
+ |      [Row(_1=&#39;Alice&#39;, _2=1)]
+ |      &gt;&gt;&gt; spark.createDataFrame(l, [&#39;name&#39;, &#39;age&#39;]).collect()
+ |      [Row(name=&#39;Alice&#39;, age=1)]
+ |      
+ |      &gt;&gt;&gt; d = [{&#39;name&#39;: &#39;Alice&#39;, &#39;age&#39;: 1}]
+ |      &gt;&gt;&gt; spark.createDataFrame(d).collect()
+ |      [Row(age=1, name=&#39;Alice&#39;)]
+ |      
+ |      &gt;&gt;&gt; rdd = sc.parallelize(l)
+ |      &gt;&gt;&gt; spark.createDataFrame(rdd).collect()
+ |      [Row(_1=&#39;Alice&#39;, _2=1)]
+ |      &gt;&gt;&gt; df = spark.createDataFrame(rdd, [&#39;name&#39;, &#39;age&#39;])
+ |      &gt;&gt;&gt; df.collect()
+ |      [Row(name=&#39;Alice&#39;, age=1)]
+ |      
+ |      &gt;&gt;&gt; from pyspark.sql import Row
+ |      &gt;&gt;&gt; Person = Row(&#39;name&#39;, &#39;age&#39;)
+ |      &gt;&gt;&gt; person = rdd.map(lambda r: Person(*r))
+ |      &gt;&gt;&gt; df2 = spark.createDataFrame(person)
+ |      &gt;&gt;&gt; df2.collect()
+ |      [Row(name=&#39;Alice&#39;, age=1)]
+ |      
+ |      &gt;&gt;&gt; from pyspark.sql.types import *
+ |      &gt;&gt;&gt; schema = StructType([
+ |      ...    StructField(&quot;name&quot;, StringType(), True),
+ |      ...    StructField(&quot;age&quot;, IntegerType(), True)])
+ |      &gt;&gt;&gt; df3 = spark.createDataFrame(rdd, schema)
+ |      &gt;&gt;&gt; df3.collect()
+ |      [Row(name=&#39;Alice&#39;, age=1)]
+ |      
+ |      &gt;&gt;&gt; spark.createDataFrame(df.toPandas()).collect()  # doctest: +SKIP
+ |      [Row(name=&#39;Alice&#39;, age=1)]
+ |      &gt;&gt;&gt; spark.createDataFrame(pandas.DataFrame([[1, 2]])).collect()  # doctest: +SKIP
+ |      [Row(0=1, 1=2)]
+ |      
+ |      &gt;&gt;&gt; spark.createDataFrame(rdd, &quot;a: string, b: int&quot;).collect()
+ |      [Row(a=&#39;Alice&#39;, b=1)]
+ |      &gt;&gt;&gt; rdd = rdd.map(lambda row: row[1])
+ |      &gt;&gt;&gt; spark.createDataFrame(rdd, &quot;int&quot;).collect()
+ |      [Row(value=1)]
+ |      &gt;&gt;&gt; spark.createDataFrame(rdd, &quot;boolean&quot;).collect() # doctest: +IGNORE_EXCEPTION_DETAIL
+ |      Traceback (most recent call last):
+ |          ...
+ |      Py4JJavaError: ...
+ |  
+ |  newSession(self)
+ |      Returns a new :class:`SparkSession` as new session, that has separate SQLConf,
+ |      registered temporary views and UDFs, but shared :class:`SparkContext` and
+ |      table cache.
+ |      
+ |      .. versionadded:: 2.0
+ |  
+ |  range(self, start, end=None, step=1, numPartitions=None)
+ |      Create a :class:`DataFrame` with single :class:`pyspark.sql.types.LongType` column named
+ |      ``id``, containing elements in a range from ``start`` to ``end`` (exclusive) with
+ |      step value ``step``.
+ |      
+ |      .. versionadded:: 2.0.0
+ |      
+ |      Parameters
+ |      ----------
+ |      start : int
+ |          the start value
+ |      end : int, optional
+ |          the end value (exclusive)
+ |      step : int, optional
+ |          the incremental step (default: 1)
+ |      numPartitions : int, optional
+ |          the number of partitions of the DataFrame
+ |      
+ |      Returns
+ |      -------
+ |      :class:`DataFrame`
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; spark.range(1, 7, 2).collect()
+ |      [Row(id=1), Row(id=3), Row(id=5)]
+ |      
+ |      If only one argument is specified, it will be used as the end value.
+ |      
+ |      &gt;&gt;&gt; spark.range(3).collect()
+ |      [Row(id=0), Row(id=1), Row(id=2)]
+ |  
+ |  sql(self, sqlQuery)
+ |      Returns a :class:`DataFrame` representing the result of the given query.
+ |      
+ |      .. versionadded:: 2.0.0
+ |      
+ |      Returns
+ |      -------
+ |      :class:`DataFrame`
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; df.createOrReplaceTempView(&quot;table1&quot;)
+ |      &gt;&gt;&gt; df2 = spark.sql(&quot;SELECT field1 AS f1, field2 as f2 from table1&quot;)
+ |      &gt;&gt;&gt; df2.collect()
+ |      [Row(f1=1, f2=&#39;row1&#39;), Row(f1=2, f2=&#39;row2&#39;), Row(f1=3, f2=&#39;row3&#39;)]
+ |  
+ |  stop(self)
+ |      Stop the underlying :class:`SparkContext`.
+ |      
+ |      .. versionadded:: 2.0
+ |  
+ |  table(self, tableName)
+ |      Returns the specified table as a :class:`DataFrame`.
+ |      
+ |      .. versionadded:: 2.0.0
+ |      
+ |      Returns
+ |      -------
+ |      :class:`DataFrame`
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; df.createOrReplaceTempView(&quot;table1&quot;)
+ |      &gt;&gt;&gt; df2 = spark.table(&quot;table1&quot;)
+ |      &gt;&gt;&gt; sorted(df.collect()) == sorted(df2.collect())
+ |      True
+ |  
+ |  ----------------------------------------------------------------------
+ |  Class methods defined here:
+ |  
+ |  getActiveSession() from builtins.type
+ |      Returns the active :class:`SparkSession` for the current thread, returned by the builder
+ |      
+ |      .. versionadded:: 3.0.0
+ |      
+ |      Returns
+ |      -------
+ |      :class:`SparkSession`
+ |          Spark session if an active session exists for the current thread
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; s = SparkSession.getActiveSession()
+ |      &gt;&gt;&gt; l = [(&#39;Alice&#39;, 1)]
+ |      &gt;&gt;&gt; rdd = s.sparkContext.parallelize(l)
+ |      &gt;&gt;&gt; df = s.createDataFrame(rdd, [&#39;name&#39;, &#39;age&#39;])
+ |      &gt;&gt;&gt; df.select(&quot;age&quot;).collect()
+ |      [Row(age=1)]
+ |  
+ |  ----------------------------------------------------------------------
+ |  Readonly properties defined here:
+ |  
+ |  catalog
+ |      Interface through which the user may create, drop, alter or query underlying
+ |      databases, tables, functions, etc.
+ |      
+ |      .. versionadded:: 2.0.0
+ |      
+ |      Returns
+ |      -------
+ |      :class:`Catalog`
+ |  
+ |  conf
+ |      Runtime configuration interface for Spark.
+ |      
+ |      This is the interface through which the user can get and set all Spark and Hadoop
+ |      configurations that are relevant to Spark SQL. When getting the value of a config,
+ |      this defaults to the value set in the underlying :class:`SparkContext`, if any.
+ |      
+ |      Returns
+ |      -------
+ |      :class:`pyspark.sql.conf.RuntimeConfig`
+ |      
+ |      .. versionadded:: 2.0
+ |  
+ |  read
+ |      Returns a :class:`DataFrameReader` that can be used to read data
+ |      in as a :class:`DataFrame`.
+ |      
+ |      .. versionadded:: 2.0.0
+ |      
+ |      Returns
+ |      -------
+ |      :class:`DataFrameReader`
+ |  
+ |  readStream
+ |      Returns a :class:`DataStreamReader` that can be used to read data streams
+ |      as a streaming :class:`DataFrame`.
+ |      
+ |      .. versionadded:: 2.0.0
+ |      
+ |      Notes
+ |      -----
+ |      This API is evolving.
+ |      
+ |      Returns
+ |      -------
+ |      :class:`DataStreamReader`
+ |  
+ |  sparkContext
+ |      Returns the underlying :class:`SparkContext`.
+ |      
+ |      .. versionadded:: 2.0
+ |  
+ |  streams
+ |      Returns a :class:`StreamingQueryManager` that allows managing all the
+ |      :class:`StreamingQuery` instances active on `this` context.
+ |      
+ |      .. versionadded:: 2.0.0
+ |      
+ |      Notes
+ |      -----
+ |      This API is evolving.
+ |      
+ |      Returns
+ |      -------
+ |      :class:`StreamingQueryManager`
+ |  
+ |  udf
+ |      Returns a :class:`UDFRegistration` for UDF registration.
+ |      
+ |      .. versionadded:: 2.0.0
+ |      
+ |      Returns
+ |      -------
+ |      :class:`UDFRegistration`
+ |  
+ |  version
+ |      The version of Spark on which this application is running.
+ |      
+ |      .. versionadded:: 2.0
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data and other attributes defined here:
+ |  
+ |  Builder = &lt;class &#39;pyspark.sql.session.SparkSession.Builder&#39;&gt;
+ |      Builder for :class:`SparkSession`.
+ |  
+ |  
+ |  builder = &lt;pyspark.sql.session.SparkSession.Builder object&gt;
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data descriptors inherited from pyspark.sql.pandas.conversion.SparkConversionMixin:
+ |  
+ |  __dict__
+ |      dictionary for instance variables (if defined)
+ |  
+ |  __weakref__
+ |      list of weak references to the object (if defined)
 </pre></div>
 </div>
 </div>
@@ -447,6 +827,590 @@ unzip &quot;$SCORES_ZIP&quot; -d data
 </div>
 <div class="section" id="loading-the-scores-csv-file-into-a-dataframe">
 <h2>Loading the Scores CSV file into a DataFrame<a class="headerlink" href="#loading-the-scores-csv-file-into-a-dataframe" title="Permalink to this headline">¶</a></h2>
+<p>We are going to use the Reader API</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on DataFrameReader in module pyspark.sql.readwriter object:
+
+class DataFrameReader(OptionUtils)
+ |  DataFrameReader(spark)
+ |  
+ |  Interface used to load a :class:`DataFrame` from external storage systems
+ |  (e.g. file systems, key-value stores, etc). Use :attr:`SparkSession.read`
+ |  to access this.
+ |  
+ |  .. versionadded:: 1.4
+ |  
+ |  Method resolution order:
+ |      DataFrameReader
+ |      OptionUtils
+ |      builtins.object
+ |  
+ |  Methods defined here:
+ |  
+ |  __init__(self, spark)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |  
+ |  csv(self, path, schema=None, sep=None, encoding=None, quote=None, escape=None, comment=None, header=None, inferSchema=None, ignoreLeadingWhiteSpace=None, ignoreTrailingWhiteSpace=None, nullValue=None, nanValue=None, positiveInf=None, negativeInf=None, dateFormat=None, timestampFormat=None, maxColumns=None, maxCharsPerColumn=None, maxMalformedLogPerPartition=None, mode=None, columnNameOfCorruptRecord=None, multiLine=None, charToEscapeQuoteEscaping=None, samplingRatio=None, enforceSchema=None, emptyValue=None, locale=None, lineSep=None, pathGlobFilter=None, recursiveFileLookup=None, modifiedBefore=None, modifiedAfter=None, unescapedQuoteHandling=None)
+ |      Loads a CSV file and returns the result as a  :class:`DataFrame`.
+ |      
+ |      This function will go through the input once to determine the input schema if
+ |      ``inferSchema`` is enabled. To avoid going through the entire data once, disable
+ |      ``inferSchema`` option or specify the schema explicitly using ``schema``.
+ |      
+ |      .. versionadded:: 2.0.0
+ |      
+ |      Parameters
+ |      ----------
+ |      path : str or list
+ |          string, or list of strings, for input path(s),
+ |          or RDD of Strings storing CSV rows.
+ |      schema : :class:`pyspark.sql.types.StructType` or str, optional
+ |          an optional :class:`pyspark.sql.types.StructType` for the input schema
+ |          or a DDL-formatted string (For example ``col0 INT, col1 DOUBLE``).
+ |      
+ |      Other Parameters
+ |      ----------------
+ |      Extra options
+ |          For the extra options, refer to
+ |          `Data Source Option &lt;https://spark.apache.org/docs/latest/sql-data-sources-csv.html#data-source-option&gt;`_
+ |          in the version you use.
+ |      
+ |          .. # noqa
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; df = spark.read.csv(&#39;python/test_support/sql/ages.csv&#39;)
+ |      &gt;&gt;&gt; df.dtypes
+ |      [(&#39;_c0&#39;, &#39;string&#39;), (&#39;_c1&#39;, &#39;string&#39;)]
+ |      &gt;&gt;&gt; rdd = sc.textFile(&#39;python/test_support/sql/ages.csv&#39;)
+ |      &gt;&gt;&gt; df2 = spark.read.csv(rdd)
+ |      &gt;&gt;&gt; df2.dtypes
+ |      [(&#39;_c0&#39;, &#39;string&#39;), (&#39;_c1&#39;, &#39;string&#39;)]
+ |  
+ |  format(self, source)
+ |      Specifies the input data source format.
+ |      
+ |      .. versionadded:: 1.4.0
+ |      
+ |      Parameters
+ |      ----------
+ |      source : str
+ |          string, name of the data source, e.g. &#39;json&#39;, &#39;parquet&#39;.
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; df = spark.read.format(&#39;json&#39;).load(&#39;python/test_support/sql/people.json&#39;)
+ |      &gt;&gt;&gt; df.dtypes
+ |      [(&#39;age&#39;, &#39;bigint&#39;), (&#39;name&#39;, &#39;string&#39;)]
+ |  
+ |  jdbc(self, url, table, column=None, lowerBound=None, upperBound=None, numPartitions=None, predicates=None, properties=None)
+ |      Construct a :class:`DataFrame` representing the database table named ``table``
+ |      accessible via JDBC URL ``url`` and connection ``properties``.
+ |      
+ |      Partitions of the table will be retrieved in parallel if either ``column`` or
+ |      ``predicates`` is specified. ``lowerBound``, ``upperBound`` and ``numPartitions``
+ |      is needed when ``column`` is specified.
+ |      
+ |      If both ``column`` and ``predicates`` are specified, ``column`` will be used.
+ |      
+ |      .. versionadded:: 1.4.0
+ |      
+ |      Parameters
+ |      ----------
+ |      table : str
+ |          the name of the table
+ |      column : str, optional
+ |          alias of ``partitionColumn`` option. Refer to ``partitionColumn`` in
+ |          `Data Source Option &lt;https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html#data-source-option&gt;`_
+ |          in the version you use.
+ |      predicates : list, optional
+ |          a list of expressions suitable for inclusion in WHERE clauses;
+ |          each one defines one partition of the :class:`DataFrame`
+ |      properties : dict, optional
+ |          a dictionary of JDBC database connection arguments. Normally at
+ |          least properties &quot;user&quot; and &quot;password&quot; with their corresponding values.
+ |          For example { &#39;user&#39; : &#39;SYSTEM&#39;, &#39;password&#39; : &#39;mypassword&#39; }
+ |      
+ |      Other Parameters
+ |      ----------------
+ |      Extra options
+ |          For the extra options, refer to
+ |          `Data Source Option &lt;https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html#data-source-option&gt;`_
+ |          in the version you use.
+ |      
+ |          .. # noqa
+ |      
+ |      Notes
+ |      -----
+ |      Don&#39;t create too many partitions in parallel on a large cluster;
+ |      otherwise Spark might crash your external database systems.
+ |      
+ |      Returns
+ |      -------
+ |      :class:`DataFrame`
+ |  
+ |  json(self, path, schema=None, primitivesAsString=None, prefersDecimal=None, allowComments=None, allowUnquotedFieldNames=None, allowSingleQuotes=None, allowNumericLeadingZero=None, allowBackslashEscapingAnyCharacter=None, mode=None, columnNameOfCorruptRecord=None, dateFormat=None, timestampFormat=None, multiLine=None, allowUnquotedControlChars=None, lineSep=None, samplingRatio=None, dropFieldIfAllNull=None, encoding=None, locale=None, pathGlobFilter=None, recursiveFileLookup=None, allowNonNumericNumbers=None, modifiedBefore=None, modifiedAfter=None)
+ |      Loads JSON files and returns the results as a :class:`DataFrame`.
+ |      
+ |      `JSON Lines &lt;http://jsonlines.org/&gt;`_ (newline-delimited JSON) is supported by default.
+ |      For JSON (one record per file), set the ``multiLine`` parameter to ``true``.
+ |      
+ |      If the ``schema`` parameter is not specified, this function goes
+ |      through the input once to determine the input schema.
+ |      
+ |      .. versionadded:: 1.4.0
+ |      
+ |      Parameters
+ |      ----------
+ |      path : str, list or :class:`RDD`
+ |          string represents path to the JSON dataset, or a list of paths,
+ |          or RDD of Strings storing JSON objects.
+ |      schema : :class:`pyspark.sql.types.StructType` or str, optional
+ |          an optional :class:`pyspark.sql.types.StructType` for the input schema or
+ |          a DDL-formatted string (For example ``col0 INT, col1 DOUBLE``).
+ |      
+ |      Other Parameters
+ |      ----------------
+ |      Extra options
+ |          For the extra options, refer to
+ |          `Data Source Option &lt;https://spark.apache.org/docs/latest/sql-data-sources-json.html#data-source-option&gt;`_
+ |          in the version you use.
+ |      
+ |          .. # noqa
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; df1 = spark.read.json(&#39;python/test_support/sql/people.json&#39;)
+ |      &gt;&gt;&gt; df1.dtypes
+ |      [(&#39;age&#39;, &#39;bigint&#39;), (&#39;name&#39;, &#39;string&#39;)]
+ |      &gt;&gt;&gt; rdd = sc.textFile(&#39;python/test_support/sql/people.json&#39;)
+ |      &gt;&gt;&gt; df2 = spark.read.json(rdd)
+ |      &gt;&gt;&gt; df2.dtypes
+ |      [(&#39;age&#39;, &#39;bigint&#39;), (&#39;name&#39;, &#39;string&#39;)]
+ |  
+ |  load(self, path=None, format=None, schema=None, **options)
+ |      Loads data from a data source and returns it as a :class:`DataFrame`.
+ |      
+ |      .. versionadded:: 1.4.0
+ |      
+ |      Parameters
+ |      ----------
+ |      path : str or list, optional
+ |          optional string or a list of string for file-system backed data sources.
+ |      format : str, optional
+ |          optional string for format of the data source. Default to &#39;parquet&#39;.
+ |      schema : :class:`pyspark.sql.types.StructType` or str, optional
+ |          optional :class:`pyspark.sql.types.StructType` for the input schema
+ |          or a DDL-formatted string (For example ``col0 INT, col1 DOUBLE``).
+ |      **options : dict
+ |          all other string options
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; df = spark.read.format(&quot;parquet&quot;).load(&#39;python/test_support/sql/parquet_partitioned&#39;,
+ |      ...     opt1=True, opt2=1, opt3=&#39;str&#39;)
+ |      &gt;&gt;&gt; df.dtypes
+ |      [(&#39;name&#39;, &#39;string&#39;), (&#39;year&#39;, &#39;int&#39;), (&#39;month&#39;, &#39;int&#39;), (&#39;day&#39;, &#39;int&#39;)]
+ |      
+ |      &gt;&gt;&gt; df = spark.read.format(&#39;json&#39;).load([&#39;python/test_support/sql/people.json&#39;,
+ |      ...     &#39;python/test_support/sql/people1.json&#39;])
+ |      &gt;&gt;&gt; df.dtypes
+ |      [(&#39;age&#39;, &#39;bigint&#39;), (&#39;aka&#39;, &#39;string&#39;), (&#39;name&#39;, &#39;string&#39;)]
+ |  
+ |  option(self, key, value)
+ |      Adds an input option for the underlying data source.
+ |      
+ |      .. versionadded:: 1.5
+ |  
+ |  options(self, **options)
+ |      Adds input options for the underlying data source.
+ |      
+ |      .. versionadded:: 1.4
+ |  
+ |  orc(self, path, mergeSchema=None, pathGlobFilter=None, recursiveFileLookup=None, modifiedBefore=None, modifiedAfter=None)
+ |      Loads ORC files, returning the result as a :class:`DataFrame`.
+ |      
+ |      .. versionadded:: 1.5.0
+ |      
+ |      Parameters
+ |      ----------
+ |      path : str or list
+ |      
+ |      Other Parameters
+ |      ----------------
+ |      Extra options
+ |          For the extra options, refer to
+ |          `Data Source Option &lt;https://spark.apache.org/docs/latest/sql-data-sources-orc.html#data-source-option&gt;`_
+ |          in the version you use.
+ |      
+ |          .. # noqa
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; df = spark.read.orc(&#39;python/test_support/sql/orc_partitioned&#39;)
+ |      &gt;&gt;&gt; df.dtypes
+ |      [(&#39;a&#39;, &#39;bigint&#39;), (&#39;b&#39;, &#39;int&#39;), (&#39;c&#39;, &#39;int&#39;)]
+ |  
+ |  parquet(self, *paths, **options)
+ |      Loads Parquet files, returning the result as a :class:`DataFrame`.
+ |      
+ |      .. versionadded:: 1.4.0
+ |      
+ |      Parameters
+ |      ----------
+ |      paths : str
+ |      
+ |      Other Parameters
+ |      ----------------
+ |      **options
+ |          For the extra options, refer to
+ |          `Data Source Option &lt;https://spark.apache.org/docs/latest/sql-data-sources-parquet.html#data-source-option&gt;`_
+ |          in the version you use.
+ |      
+ |          .. # noqa
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; df = spark.read.parquet(&#39;python/test_support/sql/parquet_partitioned&#39;)
+ |      &gt;&gt;&gt; df.dtypes
+ |      [(&#39;name&#39;, &#39;string&#39;), (&#39;year&#39;, &#39;int&#39;), (&#39;month&#39;, &#39;int&#39;), (&#39;day&#39;, &#39;int&#39;)]
+ |  
+ |  schema(self, schema)
+ |      Specifies the input schema.
+ |      
+ |      Some data sources (e.g. JSON) can infer the input schema automatically from data.
+ |      By specifying the schema here, the underlying data source can skip the schema
+ |      inference step, and thus speed up data loading.
+ |      
+ |      .. versionadded:: 1.4.0
+ |      
+ |      Parameters
+ |      ----------
+ |      schema : :class:`pyspark.sql.types.StructType` or str
+ |          a :class:`pyspark.sql.types.StructType` object or a DDL-formatted string
+ |          (For example ``col0 INT, col1 DOUBLE``).
+ |      
+ |      &gt;&gt;&gt; s = spark.read.schema(&quot;col0 INT, col1 DOUBLE&quot;)
+ |  
+ |  table(self, tableName)
+ |      Returns the specified table as a :class:`DataFrame`.
+ |      
+ |      .. versionadded:: 1.4.0
+ |      
+ |      Parameters
+ |      ----------
+ |      tableName : str
+ |          string, name of the table.
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; df = spark.read.parquet(&#39;python/test_support/sql/parquet_partitioned&#39;)
+ |      &gt;&gt;&gt; df.createOrReplaceTempView(&#39;tmpTable&#39;)
+ |      &gt;&gt;&gt; spark.read.table(&#39;tmpTable&#39;).dtypes
+ |      [(&#39;name&#39;, &#39;string&#39;), (&#39;year&#39;, &#39;int&#39;), (&#39;month&#39;, &#39;int&#39;), (&#39;day&#39;, &#39;int&#39;)]
+ |  
+ |  text(self, paths, wholetext=False, lineSep=None, pathGlobFilter=None, recursiveFileLookup=None, modifiedBefore=None, modifiedAfter=None)
+ |      Loads text files and returns a :class:`DataFrame` whose schema starts with a
+ |      string column named &quot;value&quot;, and followed by partitioned columns if there
+ |      are any.
+ |      The text files must be encoded as UTF-8.
+ |      
+ |      By default, each line in the text file is a new row in the resulting DataFrame.
+ |      
+ |      .. versionadded:: 1.6.0
+ |      
+ |      Parameters
+ |      ----------
+ |      paths : str or list
+ |          string, or list of strings, for input path(s).
+ |      
+ |      Other Parameters
+ |      ----------------
+ |      Extra options
+ |          For the extra options, refer to
+ |          `Data Source Option &lt;https://spark.apache.org/docs/latest/sql-data-sources-text.html#data-source-option&gt;`_
+ |          in the version you use.
+ |      
+ |          .. # noqa
+ |      
+ |      Examples
+ |      --------
+ |      &gt;&gt;&gt; df = spark.read.text(&#39;python/test_support/sql/text-test.txt&#39;)
+ |      &gt;&gt;&gt; df.collect()
+ |      [Row(value=&#39;hello&#39;), Row(value=&#39;this&#39;)]
+ |      &gt;&gt;&gt; df = spark.read.text(&#39;python/test_support/sql/text-test.txt&#39;, wholetext=True)
+ |      &gt;&gt;&gt; df.collect()
+ |      [Row(value=&#39;hello\nthis&#39;)]
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data descriptors inherited from OptionUtils:
+ |  
+ |  __dict__
+ |      dictionary for instance variables (if defined)
+ |  
+ |  __weakref__
+ |      list of weak references to the object (if defined)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on method csv in module pyspark.sql.readwriter:
+
+csv(path, schema=None, sep=None, encoding=None, quote=None, escape=None, comment=None, header=None, inferSchema=None, ignoreLeadingWhiteSpace=None, ignoreTrailingWhiteSpace=None, nullValue=None, nanValue=None, positiveInf=None, negativeInf=None, dateFormat=None, timestampFormat=None, maxColumns=None, maxCharsPerColumn=None, maxMalformedLogPerPartition=None, mode=None, columnNameOfCorruptRecord=None, multiLine=None, charToEscapeQuoteEscaping=None, samplingRatio=None, enforceSchema=None, emptyValue=None, locale=None, lineSep=None, pathGlobFilter=None, recursiveFileLookup=None, modifiedBefore=None, modifiedAfter=None, unescapedQuoteHandling=None) method of pyspark.sql.readwriter.DataFrameReader instance
+    Loads a CSV file and returns the result as a  :class:`DataFrame`.
+    
+    This function will go through the input once to determine the input schema if
+    ``inferSchema`` is enabled. To avoid going through the entire data once, disable
+    ``inferSchema`` option or specify the schema explicitly using ``schema``.
+    
+    .. versionadded:: 2.0.0
+    
+    Parameters
+    ----------
+    path : str or list
+        string, or list of strings, for input path(s),
+        or RDD of Strings storing CSV rows.
+    schema : :class:`pyspark.sql.types.StructType` or str, optional
+        an optional :class:`pyspark.sql.types.StructType` for the input schema
+        or a DDL-formatted string (For example ``col0 INT, col1 DOUBLE``).
+    
+    Other Parameters
+    ----------------
+    Extra options
+        For the extra options, refer to
+        `Data Source Option &lt;https://spark.apache.org/docs/latest/sql-data-sources-csv.html#data-source-option&gt;`_
+        in the version you use.
+    
+        .. # noqa
+    
+    Examples
+    --------
+    &gt;&gt;&gt; df = spark.read.csv(&#39;python/test_support/sql/ages.csv&#39;)
+    &gt;&gt;&gt; df.dtypes
+    [(&#39;_c0&#39;, &#39;string&#39;), (&#39;_c1&#39;, &#39;string&#39;)]
+    &gt;&gt;&gt; rdd = sc.textFile(&#39;python/test_support/sql/ages.csv&#39;)
+    &gt;&gt;&gt; df2 = spark.read.csv(rdd)
+    &gt;&gt;&gt; df2.dtypes
+    [(&#39;_c0&#39;, &#39;string&#39;), (&#39;_c1&#39;, &#39;string&#39;)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="n">scores_csv</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DataFrame[_c0: string, _c1: string, _c2: string, _c3: string, _c4: string, _c5: string, _c6: string, _c7: string, _c8: string, _c9: string, _c10: string, _c11: string]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">show</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on method show in module pyspark.sql.dataframe:
+
+show(n=20, truncate=True, vertical=False) method of pyspark.sql.dataframe.DataFrame instance
+    Prints the first ``n`` rows to the console.
+    
+    .. versionadded:: 1.3.0
+    
+    Parameters
+    ----------
+    n : int, optional
+        Number of rows to show.
+    truncate : bool or int, optional
+        If set to ``True``, truncate strings longer than 20 chars by default.
+        If set to a number greater than one, truncates long strings to length ``truncate``
+        and align cells right.
+    vertical : bool, optional
+        If set to ``True``, print output rows vertically (one line
+        per column value).
+    
+    Examples
+    --------
+    &gt;&gt;&gt; df
+    DataFrame[age: int, name: string]
+    &gt;&gt;&gt; df.show()
+    +---+-----+
+    |age| name|
+    +---+-----+
+    |  2|Alice|
+    |  5|  Bob|
+    +---+-----+
+    &gt;&gt;&gt; df.show(truncate=3)
+    +---+----+
+    |age|name|
+    +---+----+
+    |  2| Ali|
+    |  5| Bob|
+    +---+----+
+    &gt;&gt;&gt; df.show(vertical=True)
+    -RECORD 0-----
+     age  | 2
+     name | Alice
+    -RECORD 1-----
+     age  | 5
+     name | Bob
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can look at the head of the DataFrame calling the <code class="docutils literal notranslate"><span class="pre">show</span></code> method.</p>
+<p>scores.show()</p>
+<p><strong>Can anyone spot what’s wrong with the above data?</strong></p>
+<ul class="simple">
+<li><p>Question marks</p></li>
+<li><p>Column names</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Float</span></code> and <code class="docutils literal notranslate"><span class="pre">Int</span></code> in the same column</p></li>
+</ul>
+<p>Let’s check the schema of our DataFrame</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">printSchema</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on method printSchema in module pyspark.sql.dataframe:
+
+printSchema() method of pyspark.sql.dataframe.DataFrame instance
+    Prints out the schema in the tree format.
+    
+    .. versionadded:: 1.3.0
+    
+    Examples
+    --------
+    &gt;&gt;&gt; df.printSchema()
+    root
+     |-- age: integer (nullable = true)
+     |-- name: string (nullable = true)
+    &lt;BLANKLINE&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root
+ |-- _c0: string (nullable = true)
+ |-- _c1: string (nullable = true)
+ |-- _c2: string (nullable = true)
+ |-- _c3: string (nullable = true)
+ |-- _c4: string (nullable = true)
+ |-- _c5: string (nullable = true)
+ |-- _c6: string (nullable = true)
+ |-- _c7: string (nullable = true)
+ |-- _c8: string (nullable = true)
+ |-- _c9: string (nullable = true)
+ |-- _c10: string (nullable = true)
+ |-- _c11: string (nullable = true)
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Why everythin is a <code class="docutils literal notranslate"><span class="pre">String</span></code>?</strong></p>
+<div class="section" id="managing-schema-and-null-values">
+<h3>Managing Schema and Null Values<a class="headerlink" href="#managing-schema-and-null-values" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">spark</span><span class="o">.</span><span class="n">read</span>
+        <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;nullValue&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;inferSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="n">scores_csv</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Stage 2:&gt;                                                          (0 + 1) / 1]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                                
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores_df</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root
+ |-- id_1: integer (nullable = true)
+ |-- id_2: integer (nullable = true)
+ |-- cmp_fname_c1: double (nullable = true)
+ |-- cmp_fname_c2: double (nullable = true)
+ |-- cmp_lname_c1: double (nullable = true)
+ |-- cmp_lname_c2: double (nullable = true)
+ |-- cmp_sex: integer (nullable = true)
+ |-- cmp_bd: integer (nullable = true)
+ |-- cmp_bm: integer (nullable = true)
+ |-- cmp_by: integer (nullable = true)
+ |-- cmp_plz: integer (nullable = true)
+ |-- is_match: boolean (nullable = true)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores_df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>+-----+-----+-----------------+------------+------------+------------+-------+------+------+------+-------+--------+
+| id_1| id_2|     cmp_fname_c1|cmp_fname_c2|cmp_lname_c1|cmp_lname_c2|cmp_sex|cmp_bd|cmp_bm|cmp_by|cmp_plz|is_match|
++-----+-----+-----------------+------------+------------+------------+-------+------+------+------+-------+--------+
+|37291|53113|0.833333333333333|        null|         1.0|        null|      1|     1|     1|     1|      0|    true|
+|39086|47614|              1.0|        null|         1.0|        null|      1|     1|     1|     1|      1|    true|
+|70031|70237|              1.0|        null|         1.0|        null|      1|     1|     1|     1|      1|    true|
+|84795|97439|              1.0|        null|         1.0|        null|      1|     1|     1|     1|      1|    true|
+|36950|42116|              1.0|        null|         1.0|         1.0|      1|     1|     1|     1|      1|    true|
++-----+-----+-----------------+------------+------------+------------+-------+------+------+------+-------+--------+
+only showing top 5 rows
+</pre></div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
