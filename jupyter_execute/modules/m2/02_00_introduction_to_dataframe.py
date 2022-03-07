@@ -149,6 +149,233 @@ scores_df.printSchema()
 scores_df.show(5)
 
 
+# ## Transformations and Actions
+# 
+# Creating a DataFrame does not cause any distributed computation in the cluster. **A DataFrame is un data set representing an intermediate step in a computation**.
+# 
+# For operatring data (in a distributed manner), we have two type of operations: **transformations** and **actions**:
+# 
+# - Transformations: lazy evaluation. They're not computed immediately, but they are recorded as a **lineage** for query play optimization.
+# - Actions: distributed computation occurs after invoking an action
+
+# In[17]:
+
+
+# how many?
+scores_df.count()
+
+
+# We can use the `collect` action to return `Array` with all the `Row` objects in our DataFrame.
+
+# In[18]:
+
+
+scores_df.collect()
+
+
+# **The `Array` will reside in local memory!!**
+
+# ## Write to Disk
+# 
+# We are going to save the DataFrame into a different format: Parquet
+
+# In[19]:
+
+
+scores_df.write.format("parquet").save("data/scores-parquet")
+
+
+# In[20]:
+
+
+get_ipython().system(' ls data/scores-parquet')
+
+
+# In[21]:
+
+
+scores_parquet = spark.read.parquet("data/scores-parquet")
+
+
+# In[22]:
+
+
+scores_parquet.printSchema()
+
+
+# In[23]:
+
+
+scores_parquet.show(5)
+
+
+# ## Analyzing Data
+# 
+# All good for now, but we don't load data for the sake of i, we do it because we want to run some analysis.
+# 
+# - First two column are Integer IDs. There represent the patients that were matched in the record.
+# - The next nine column are numeric values (int and double). They represnt match scores on different fields, such name, sex, birthday, and locations.
+# - The last column is a boolean value indicating whether or not the pair of patient records represented by the line was a match.
+# 
+# **We could use this dataset to build a simple classifier that allows us to predict whether a record will be a match based on the values of the match scores for patient records.**
+
+# ### Caching
+# 
+# Each time we process data (e.g., calling the `collect` method), Spark re-opens the file, parsea the rows, and then execute the requested action. It does not matter if we have filtered the data and created a smaller set of record.
+# 
+# We can use the `cache` method to indicate to store the DataFrame in memory.
+
+# In[24]:
+
+
+help(scores_df.cache)
+
+
+# **Spark is in-memory only. Myth or misconception?**
+# 
+# "Spill"
+# Storage levels:
+# - `MEMORY_AND_DISK`
+# - `MEMORY`
+# - `MEMORY_SER`
+
+# In[25]:
+
+
+scores_cached = scores_df.cache()
+
+
+# In[26]:
+
+
+scores_cached.count()
+
+
+# In[27]:
+
+
+scores_cached.take(10)
+
+
+# ### Query Plan
+
+# In[28]:
+
+
+scores_cached.explain()
+
+
+# ### GroupBy + OrderBy
+
+# In[29]:
+
+
+from pyspark.sql.functions import col
+
+scores_cached.groupBy("is_match").count().orderBy(col("count").desc()).show()
+
+
+# ## Aggregation Functions
+# 
+# In addition to `count`, we can also compute more complex aggregation like sums, mins, maxes, means, and standard deviation. How? we use `agg` method of the DataFrame API.
+
+# In[30]:
+
+
+from pyspark.sql.functions import avg, stddev
+
+
+# In[31]:
+
+
+aggregated = scores_cached.agg(avg("cmp_sex"), stddev("cmp_sex"))
+
+
+# In[32]:
+
+
+aggregated.explain()
+
+
+# In[33]:
+
+
+aggregated.show()
+
+
+# ## SQL
+# 
+# ANSI 2003-compliant version or HiveQL.
+
+# In[34]:
+
+
+scores_df.createOrReplaceTempView("scores")
+
+
+# In[35]:
+
+
+# scores_cached.groupBy("is_match").count().orderBy(col("count").desc()).show()
+spark.sql("""
+    SELECT is_match, COUNT(*) cnt
+    FROM scores
+    GROUP BY is_match
+    ORDER BY cnt DESC
+""").show()
+
+
+# In[36]:
+
+
+spark.sql("""
+    SELECT is_match, COUNT(*) cnt
+    FROM scores
+    GROUP BY is_match
+    ORDER BY cnt DESC
+""").explain()
+
+
+# In[37]:
+
+
+scores_cached.groupBy("is_match").count().orderBy(col("count").desc()).explain()
+
+
+# ### Should I use Spark SQL or the DataFrame API
+# 
+# Depends on the query. 
+
+# ## Pandas is my friend!
+# 
+# required packages: `pandas` and `numpy`
+# - poetry add pandas numpy
+# - pip install pandas numpy
+
+# In[38]:
+
+
+scores_pandas = scores_df.toPandas()
+
+
+# In[39]:
+
+
+scores_pandas.head()
+
+
+# In[40]:
+
+
+scores_pandas.shape
+
+
+# In[ ]:
+
+
+
+
+
 # In[ ]:
 
 
