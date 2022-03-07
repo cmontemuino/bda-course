@@ -18,3 +18,8 @@
 # Source: https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
 poetry.lock
 
+# Custom
+coursebook/modules/m2/data/scores.csv
+coursebook/modules/m2/data/scores-parquet
+__MACOSX
+
