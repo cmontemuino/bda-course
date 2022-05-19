@@ -468,7 +468,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by org.apache.spark.unsafe.Platform (file:/opt/hostedtoolcache/Python/3.9.10/x64/lib/python3.9/site-packages/pyspark/jars/spark-unsafe_2.12-3.2.1.jar) to constructor java.nio.DirectByteBuffer(long,int)
+WARNING: Illegal reflective access by org.apache.spark.unsafe.Platform (file:/opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/pyspark/jars/spark-unsafe_2.12-3.2.1.jar) to constructor java.nio.DirectByteBuffer(long,int)
 WARNING: Please consider reporting this to the maintainers of org.apache.spark.unsafe.Platform
 WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
 WARNING: All illegal access operations will be denied in a future release
@@ -477,7 +477,9 @@ WARNING: All illegal access operations will be denied in a future release
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using Spark&#39;s default log4j profile: org/apache/spark/log4j-defaults.properties
 Setting default log level to &quot;WARN&quot;.
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-22/03/07 17:59:27 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22/05/19 04:57:10 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 </pre></div>
 </div>
 </div>
@@ -1318,13 +1320,6 @@ csv(path, schema=None, sep=None, encoding=None, quote=None, escape=None, comment
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="n">scores_csv</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Stage 0:&gt;                                                          (0 + 1) / 1]
-
-                                                                                
 </pre></div>
 </div>
 </div>
@@ -2592,7 +2587,7 @@ only showing top 5 rows
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>_SUCCESS  part-00000-72cfc7af-ce20-4fad-b762-4940f156cafe-c000.snappy.parquet
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>_SUCCESS  part-00000-68c9e6bf-c22a-4a06-aa6c-a66c93d988d7-c000.snappy.parquet
 </pre></div>
 </div>
 </div>
