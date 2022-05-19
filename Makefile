@@ -64,7 +64,7 @@ requirements:
 
 .PHONY: jupyter-start
 jupyter-start:
-	jupyter notebook --no-browser --port=8898
+	jupyter-lab --no-browser --port=8898
 
 # echo_bold,msg
 # Print a message with bold font
